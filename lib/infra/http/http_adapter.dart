@@ -18,8 +18,12 @@ class HttpAdapter implements HttpClient {
     };
     var response = Response('', 500);
     final jsonBody = body != null ? jsonEncode(body) : null;
-    if (method == 'post') {
-      response = await client.post(url, headers: headers, body: jsonBody);
+    try {
+      if (method == 'post') {
+        response = await client.post(url, headers: headers, body: jsonBody);
+      }
+    } catch (error) {
+      throw HttpError.serverError;
     }
     return _handleResponse(response);
   }
