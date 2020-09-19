@@ -1,5 +1,5 @@
 # HTTP POST
-✅ 
+
 > ## Sucesso
 1. ✅ Request com verbo http correto (post)
 2. ✅ Passar nos headers o content type JSON
@@ -10,7 +10,7 @@
 > ## Erros
 1. ✅ Bad request - 400
 2. ✅ Unauthorized - 401
-3. Forbidden - 403
+3. ✅ Forbidden - 403
 4. Not found - 404
 5. ✅ Internal server error - 500
 
