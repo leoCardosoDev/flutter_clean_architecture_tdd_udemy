@@ -22,4 +22,8 @@ void main() {
   test('Should return null if email is null', () {
     expect(sut.validate(null), null);
   });
+
+  test('Should return null if email is valid', () {
+    expect(sut.validate('any_email@mail.com'), null);
+  });
 }
