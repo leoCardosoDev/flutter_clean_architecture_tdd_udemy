@@ -224,7 +224,7 @@ void main() {
     mainErrorController.add(UiError.invalidCredentials);
     await tester.pump();
 
-    expect(find.text('Credenciais inválidas'), findsWidgets);
+    expect(find.text('Credenciais inválidas.'), findsWidgets);
   });
 
   testWidgets('Should throw message if authentication throws',
@@ -234,7 +234,7 @@ void main() {
     mainErrorController.add(UiError.unexpected);
     await tester.pump();
 
-    expect(find.text('Algo errado aconteceu! Tente novamente em breve'),
+    expect(find.text('Algo errado aconteceu. Tente novamente em breve.'),
         findsWidgets);
   });
 
