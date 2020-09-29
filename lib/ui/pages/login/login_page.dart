@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_clean_architecture_tdd/utils/i18n/i18n.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import '../../../utils/i18n/i18n.dart';
+import '../../helpers/errors/ui-error.dart';
 import '../../components/components.dart';
 import './login_presenter.dart';
 import './components/components.dart';
@@ -32,7 +33,7 @@ class LoginPage extends StatelessWidget {
 
           presenter.mainErrorStream.listen((error) {
             if (error != null) {
-              showErrorMessage(context, error);
+              showErrorMessage(context, error.description);
             }
           });
 

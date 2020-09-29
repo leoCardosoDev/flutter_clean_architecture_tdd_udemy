@@ -7,9 +7,6 @@ class R {
 
   static void load(Locale locale) {
     switch (locale.toString()) {
-      case 'en_Us':
-        strings = EnUs();
-        break;
       default:
         strings = PtBr();
         break;
