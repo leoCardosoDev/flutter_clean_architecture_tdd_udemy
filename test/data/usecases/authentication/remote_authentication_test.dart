@@ -18,6 +18,7 @@ void main() {
 
   Map mockValidData() =>
       {'accessToken': faker.guid.guid(), 'name': faker.person.name()};
+
   PostExpectation mockRequest() => when(httpClient.request(
       url: anyNamed('url'),
       method: anyNamed('method'),
