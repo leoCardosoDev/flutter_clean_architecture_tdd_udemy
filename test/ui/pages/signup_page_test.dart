@@ -245,7 +245,7 @@ void main() {
     await tester.tap(button);
     await tester.pump();
 
-    verify(presenter.signup()).called(1);
+    verify(presenter.signUp()).called(1);
   });
 
   testWidgets('Should present loading', (WidgetTester tester) async {
