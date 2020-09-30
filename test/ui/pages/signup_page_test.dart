@@ -17,6 +17,7 @@ void main() {
   StreamController<UiError> emailErrorController;
   StreamController<UiError> passwordErrorController;
   StreamController<UiError> passwordConfirmationErrorController;
+  StreamController<UiError> mainErrorController;
   StreamController<bool> isFormValidController;
   StreamController<bool> isLoadingController;
 
@@ -25,6 +26,7 @@ void main() {
     emailErrorController = StreamController<UiError>();
     passwordErrorController = StreamController<UiError>();
     passwordConfirmationErrorController = StreamController<UiError>();
+    mainErrorController = StreamController<UiError>();
     isFormValidController = StreamController<bool>();
     isLoadingController = StreamController<bool>();
   }
@@ -38,6 +40,8 @@ void main() {
         .thenAnswer((_) => passwordErrorController.stream);
     when(presenter.passwordConfirmationErrorStream)
         .thenAnswer((_) => passwordConfirmationErrorController.stream);
+    when(presenter.mainErrorStream)
+        .thenAnswer((_) => mainErrorController.stream);
     when(presenter.isFormValidStream)
         .thenAnswer((_) => isFormValidController.stream);
     when(presenter.isLoadingStream)
@@ -49,6 +53,7 @@ void main() {
     emailErrorController.close();
     passwordErrorController.close();
     passwordConfirmationErrorController.close();
+    mainErrorController.close();
     isFormValidController.close();
     isLoadingController.close();
   }
@@ -253,5 +258,26 @@ void main() {
     await tester.pump();
 
     expect(find.byType(CircularProgressIndicator), findsNothing);
+  });
+
+  testWidgets('Should present error message if signup fails',
+      (WidgetTester tester) async {
+    await loadPage(tester);
+
+    mainErrorController.add(UiError.emailInUse);
+    await tester.pump();
+
+    expect(find.text('O email já está em uso.'), findsWidgets);
+  });
+
+  testWidgets('Should throw message if authentication throws',
+      (WidgetTester tester) async {
+    await loadPage(tester);
+
+    mainErrorController.add(UiError.unexpected);
+    await tester.pump();
+
+    expect(find.text('Algo errado aconteceu. Tente novamente em breve.'),
+        findsWidgets);
   });
 }
