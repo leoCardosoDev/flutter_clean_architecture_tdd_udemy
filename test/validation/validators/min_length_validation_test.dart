@@ -13,7 +13,9 @@ class MinLengthValidation extends Equatable implements FieldValidation {
 
   MinLengthValidation({@required this.field, @required this.size});
   ValidationError validate(Map input) =>
-      input[field]?.length == size ? null : ValidationError.invalidField;
+      input[field] != null && input[field].length >= size
+          ? null
+          : ValidationError.invalidField;
 }
 
 void main() {
@@ -38,6 +40,12 @@ void main() {
 
   test('Should return null if value is equal than min size', () {
     expect(sut.validate({'any_field': faker.randomGenerator.string(5, min: 5)}),
+        null);
+  });
+
+  test('Should return null if value is bigger than min size', () {
+    expect(
+        sut.validate({'any_field': faker.randomGenerator.string(10, min: 6)}),
         null);
   });
 }
