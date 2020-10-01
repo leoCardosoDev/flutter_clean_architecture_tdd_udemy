@@ -8,7 +8,7 @@ import 'package:flutter_clean_architecture_tdd/data/http/http_client.dart';
 
 class RemoteLoadSurveys {
   final String url;
-  final HttpClient httpClient;
+  final HttpClient<List<Map>> httpClient;
 
   RemoteLoadSurveys({@required this.url, @required this.httpClient});
 
@@ -17,12 +17,27 @@ class RemoteLoadSurveys {
   }
 }
 
-class HttpClientSpy extends Mock implements HttpClient {}
+class HttpClientSpy extends Mock implements HttpClient<List<Map>> {}
 
 void main() {
   RemoteLoadSurveys sut;
   HttpClientSpy httpClient;
   String url;
+
+  List<Map> mockValidData() => [
+        {
+          'id': faker.guid.guid(),
+          'question': faker.randomGenerator.string(50),
+          'didAnswer': faker.randomGenerator.boolean(),
+          'date': faker.date.dateTime().toIso8601String(),
+        },
+        {
+          'id': faker.guid.guid(),
+          'question': faker.randomGenerator.string(50),
+          'didAnswer': faker.randomGenerator.boolean(),
+          'date': faker.date.dateTime().toIso8601String(),
+        }
+      ];
 
   setUp(() {
     url = faker.internet.httpUrl();
@@ -31,6 +46,14 @@ void main() {
   });
 
   test('Should call HttpClient with correct values', () async {
+    await sut.load();
+
+    verify(httpClient.request(url: url, method: 'get'));
+  });
+
+  test('Should return surveys on 200', () async {
+    when(httpClient.request(url: anyNamed('url'), method: anyNamed('method')))
+        .thenAnswer((_) async => mockValidData());
     await sut.load();
 
     verify(httpClient.request(url: url, method: 'get'));
