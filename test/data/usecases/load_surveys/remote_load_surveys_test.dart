@@ -4,7 +4,10 @@ import 'package:faker/faker.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import 'package:flutter_clean_architecture_tdd/domain/entities/entities.dart';
+
 import 'package:flutter_clean_architecture_tdd/data/http/http_client.dart';
+import 'package:flutter_clean_architecture_tdd/data/models/models.dart';
 
 class RemoteLoadSurveys {
   final String url;
@@ -12,8 +15,11 @@ class RemoteLoadSurveys {
 
   RemoteLoadSurveys({@required this.url, @required this.httpClient});
 
-  Future<void> load() async {
-    await httpClient.request(url: url, method: 'get');
+  Future<List<SurveyEntity>> load() async {
+    final httpResponse = await httpClient.request(url: url, method: 'get');
+    return httpResponse
+        .map((json) => RemoteSurveyModel.fromJson(json).toEntity())
+        .toList();
   }
 }
 
@@ -23,6 +29,7 @@ void main() {
   RemoteLoadSurveys sut;
   HttpClientSpy httpClient;
   String url;
+  List<Map> list;
 
   List<Map> mockValidData() => [
         {
@@ -39,10 +46,19 @@ void main() {
         }
       ];
 
+  PostExpectation mockRequest() => when(
+      httpClient.request(url: anyNamed('url'), method: anyNamed('method')));
+
+  void mockHttpData(List<Map> data) {
+    list = data;
+    mockRequest().thenAnswer((_) async => data);
+  }
+
   setUp(() {
     url = faker.internet.httpUrl();
     httpClient = HttpClientSpy();
     sut = RemoteLoadSurveys(url: url, httpClient: httpClient);
+    mockHttpData(mockValidData());
   });
 
   test('Should call HttpClient with correct values', () async {
@@ -52,10 +68,21 @@ void main() {
   });
 
   test('Should return surveys on 200', () async {
-    when(httpClient.request(url: anyNamed('url'), method: anyNamed('method')))
-        .thenAnswer((_) async => mockValidData());
-    await sut.load();
+    final surveys = await sut.load();
 
-    verify(httpClient.request(url: url, method: 'get'));
+    expect(surveys, [
+      SurveyEntity(
+        id: list[0]['id'],
+        question: list[0]['question'],
+        dateTime: DateTime.parse(list[0]['date']),
+        didAnswer: list[0]['didAnswer'],
+      ),
+      SurveyEntity(
+        id: list[1]['id'],
+        question: list[1]['question'],
+        dateTime: DateTime.parse(list[1]['date']),
+        didAnswer: list[1]['didAnswer'],
+      )
+    ]);
   });
 }
