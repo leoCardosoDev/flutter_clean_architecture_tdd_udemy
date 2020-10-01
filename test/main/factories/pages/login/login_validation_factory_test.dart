@@ -10,6 +10,7 @@ void main() {
       RequiredFieldValidaton('email'),
       EmailValidation('email'),
       RequiredFieldValidaton('password'),
+      MinLengthValidation(field: 'password', size: 3)
     ]);
   });
 }
