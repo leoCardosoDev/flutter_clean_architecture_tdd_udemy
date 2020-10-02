@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../survey_view_model.dart';
+
 class SurveysItem extends StatelessWidget {
+  final SurveyViewModel viewModel;
+  SurveysItem(this.viewModel);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -31,7 +36,7 @@ class SurveysItem extends StatelessWidget {
           ),
           SizedBox(height: 20),
           Text(
-            'Qual é o seu framework web favorito?',
+            viewModel.question,
             style: TextStyle(color: Colors.white, fontSize: 22),
           ),
         ],
