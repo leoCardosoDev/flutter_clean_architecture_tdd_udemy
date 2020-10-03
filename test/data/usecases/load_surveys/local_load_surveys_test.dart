@@ -14,7 +14,7 @@ class LocalLoadSurveys {
 
   Future<List<SurveyEntity>> load() async {
     final data = await fetchCacheStorage.fetch('surveys');
-    if (data.isEmpty) {
+    if (data?.isEmpty != false) {
       throw DomainError.unexpected;
     }
     return data
@@ -84,6 +84,14 @@ void main() {
 
   test('Should throw UnexpectedErrorif cache is empty', () async {
     mockFetch([]);
+
+    final future = sut.load();
+
+    expect(future, throwsA(DomainError.unexpected));
+  });
+
+  test('Should throw UnexpectedErrorif cache is null', () async {
+    mockFetch(null);
 
     final future = sut.load();
 
