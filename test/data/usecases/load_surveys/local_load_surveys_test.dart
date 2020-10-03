@@ -8,15 +8,15 @@ import 'package:flutter_clean_architecture_tdd/domain/helpers/helpers.dart';
 import 'package:flutter_clean_architecture_tdd/data/cache/cache.dart';
 import 'package:flutter_clean_architecture_tdd/data/usecases/usecases.dart';
 
-class FetchCacheStorageSpy extends Mock implements FetchCacheStorage {}
+class CacheStorageSpy extends Mock implements CacheStorage {}
 
 void main() {
   group('LOAD', () {
     LocalLoadSurveys sut;
-    FetchCacheStorageSpy fetchCacheStorage;
+    CacheStorageSpy cacheStorage;
     List<Map> data;
 
-    PostExpectation mockFetchCall() => when(fetchCacheStorage.fetch(any));
+    PostExpectation mockFetchCall() => when(cacheStorage.fetch(any));
 
     List<Map> mockValidData() => [
           {
@@ -40,15 +40,15 @@ void main() {
     void mockFetchError() => mockFetchCall().thenThrow(Exception());
 
     setUp(() {
-      fetchCacheStorage = FetchCacheStorageSpy();
-      sut = LocalLoadSurveys(fetchCacheStorage: fetchCacheStorage);
+      cacheStorage = CacheStorageSpy();
+      sut = LocalLoadSurveys(cacheStorage: cacheStorage);
       mockFetch(mockValidData());
     });
 
-    test('Should call FetchCacheStorage with correct key', () async {
+    test('Should call cacheStorage with correct key', () async {
       await sut.load();
 
-      verify(fetchCacheStorage.fetch('surveys')).called(1);
+      verify(cacheStorage.fetch('surveys')).called(1);
     });
 
     test('Should return a list of surveys on success', () async {
