@@ -7,7 +7,7 @@ import 'package:meta/meta.dart';
 import 'package:flutter_clean_architecture_tdd/data/cache/cache.dart';
 import 'package:flutter_clean_architecture_tdd/data/http/http.dart';
 
-class AuthorizeHttpClientDecorator {
+class AuthorizeHttpClientDecorator implements HttpClient {
   final FetchSecureCacheStorage fetchSecureCacheStorage;
   final HttpClient decoratee;
 
@@ -16,7 +16,7 @@ class AuthorizeHttpClientDecorator {
     @required this.decoratee,
   });
 
-  Future<void> request({
+  Future<dynamic> request({
     @required String url,
     @required String method,
     Map body,
@@ -25,7 +25,7 @@ class AuthorizeHttpClientDecorator {
     final token = await fetchSecureCacheStorage.fetchSecure('token');
     final authorizedHeaders = headers ?? {}
       ..addAll({'x-access-token': token});
-    await decoratee.request(
+    return await decoratee.request(
       url: url,
       method: method,
       body: body,
@@ -43,13 +43,23 @@ void main() {
   AuthorizeHttpClientDecorator sut;
   FetchSecureCacheStorageSpy fetchSecureCacheStorage;
   HttpClientSpy httpClient;
-  String token, url, method;
+  String httpResponse, token, url, method;
   Map body;
 
   void mockToken() {
     token = faker.guid.guid();
     when(fetchSecureCacheStorage.fetchSecure(any))
         .thenAnswer((_) async => token);
+  }
+
+  void mockHttpResponse() {
+    httpResponse = faker.randomGenerator.string(50);
+    when(httpClient.request(
+      url: anyNamed('url'),
+      method: anyNamed('method'),
+      body: anyNamed('body'),
+      headers: anyNamed('headers'),
+    )).thenAnswer((_) async => httpResponse);
   }
 
   setUp(() {
@@ -63,6 +73,7 @@ void main() {
     method = faker.randomGenerator.string(6);
     body = {'any_key': 'any_value'};
     mockToken();
+    mockHttpResponse();
   });
 
   test('Should call FetchSecureCacheStorage with correct key', () async {
@@ -91,5 +102,11 @@ void main() {
       body: body,
       headers: {'x-access-token': token, 'any_header': 'any_value'},
     )).called(1);
+  });
+
+  test('Should return same result as decoratee', () async {
+    final response = await sut.request(url: url, method: method, body: body);
+
+    expect(response, httpResponse);
   });
 }
