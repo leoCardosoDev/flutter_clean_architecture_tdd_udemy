@@ -26,15 +26,15 @@ class LocalLoadSurveys implements LoadSurveys {
   }
 
   Future<void> validate() async {
-    final data = await cacheStorage.fetch('surveys');
     try {
+      final data = await cacheStorage.fetch('surveys');
       _map(data);
     } catch (error) {
       await cacheStorage.delete('surveys');
     }
   }
 
-  List<SurveyEntity> _map(List<Map> list) => list
+  List<SurveyEntity> _map(dynamic list) => list
       .map<SurveyEntity>((json) => LocalSurveyModel.fromJson(json).toEntity())
       .toList();
 }

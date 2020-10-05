@@ -144,6 +144,8 @@ void main() {
       mockFetchCall().thenAnswer((_) async => data);
     }
 
+    void mockFetchError() => mockFetchCall().thenThrow(Exception());
+
     setUp(() {
       cacheStorage = CacheStorageSpy();
       sut = LocalLoadSurveys(cacheStorage: cacheStorage);
@@ -175,6 +177,14 @@ void main() {
       mockFetch([
         {'date': '2020-07-20T00:00:00Z', 'didAnswer': 'false'}
       ]);
+
+      await sut.validate();
+
+      verify(cacheStorage.delete('surveys')).called(1);
+    });
+
+    test('Should delete cache if throws', () async {
+      mockFetchError();
 
       await sut.validate();
 
