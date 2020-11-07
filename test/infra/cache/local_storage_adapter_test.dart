@@ -26,26 +26,28 @@ void main() {
     sut = LocalStorageAdapter(localStorage: localStorage);
   });
 
-  test('Should call localStorage with correct values', () async {
-    await sut.save(key: key, value: value);
+  group('SAVE', () {
+    test('Should call localStorage with correct values', () async {
+      await sut.save(key: key, value: value);
 
-    verify(localStorage.deleteItem(key)).called(1);
-    verify(localStorage.setItem(key, value)).called(1);
-  });
+      verify(localStorage.deleteItem(key)).called(1);
+      verify(localStorage.setItem(key, value)).called(1);
+    });
 
-  test('Should throws if deleteItem throws', () async {
-    mockDeleteError();
+    test('Should throws if deleteItem throws', () async {
+      mockDeleteError();
 
-    final future = sut.save(key: key, value: value);
+      final future = sut.save(key: key, value: value);
 
-    expect(future, throwsA(TypeMatcher<Exception>()));
-  });
+      expect(future, throwsA(TypeMatcher<Exception>()));
+    });
 
-  test('Should throws if SetItem throws', () async {
-    mockSaveError();
+    test('Should throws if SetItem throws', () async {
+      mockSaveError();
 
-    final future = sut.save(key: key, value: value);
+      final future = sut.save(key: key, value: value);
 
-    expect(future, throwsA(TypeMatcher<Exception>()));
+      expect(future, throwsA(TypeMatcher<Exception>()));
+    });
   });
 }
