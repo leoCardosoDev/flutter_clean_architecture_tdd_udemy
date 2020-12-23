@@ -36,7 +36,6 @@ flutter:
 
   assets:
     - lib/ui/assets/
-  #   - images/a_dot_ham.jpeg
 
 flutter_icons:
   ios: true
