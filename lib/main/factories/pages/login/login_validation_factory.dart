@@ -1,8 +1,8 @@
-import 'package:flutter_clean_architecture_tdd/main/builders/builders.dart';
+import '../../../builders/builders.dart';
+import '../../../composites/composites.dart';
 
 import '../../../../presentation/protocols/protocols.dart';
 import '../../../../validation/protocols/protocols.dart';
-import '../../../../validation/validators/validators.dart';
 
 Validation makeLoginValidation() {
   return ValidationComposite(makeLoginValidations());

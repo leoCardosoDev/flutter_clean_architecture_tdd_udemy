@@ -2,7 +2,7 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import 'package:flutter_clean_architecture_tdd/validation/protocols/protocols.dart';
-import 'package:flutter_clean_architecture_tdd/validation/validators/validators.dart';
+import 'package:flutter_clean_architecture_tdd/main/composites/composites.dart';
 
 import 'package:flutter_clean_architecture_tdd/presentation/protocols/protocols.dart';
 
