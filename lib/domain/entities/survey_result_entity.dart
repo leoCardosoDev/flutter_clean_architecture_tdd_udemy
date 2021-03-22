@@ -1,0 +1,14 @@
+import './entities.dart';
+import 'package:meta/meta.dart';
+
+class SurveyResultEntity {
+  final String id;
+  final String question;
+  final List<SurveyAnswerEntity> answers;
+
+  SurveyResultEntity({
+    @required this.id,
+    @required this.question,
+    @required this.answers,
+  });
+}
