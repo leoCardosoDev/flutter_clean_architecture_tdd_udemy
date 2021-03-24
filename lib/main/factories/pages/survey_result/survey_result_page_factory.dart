@@ -1,4 +1,4 @@
 import 'package:flutter/material.dart';
 import '../../../../ui/pages/pages.dart';
 
-Widget makeSurveyResultPage() => SurveyResultPage();
+Widget makeSurveyResultPage() => SurveyResultPage(null);
