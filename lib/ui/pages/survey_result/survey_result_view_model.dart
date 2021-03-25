@@ -1,17 +1,17 @@
-import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-class SurveyResultViewModel extends Equatable {
-  final String id;
+import './survey_answer_view_model.dart';
+
+class SurveyResultViewModel {
+  final String surveyId;
   final String question;
-  final String date;
-  final bool didAnswer;
+  final List<SurveyAnswerViewModel> answers;
 
-  List get props => ['id', 'question', 'date', 'didAnswer'];
+  List get props => ['surveyId', 'question', 'answers'];
 
-  SurveyResultViewModel(
-      {@required this.id,
-      @required this.question,
-      @required this.date,
-      @required this.didAnswer});
+  SurveyResultViewModel({
+    @required this.surveyId,
+    @required this.question,
+    @required this.answers,
+  });
 }
