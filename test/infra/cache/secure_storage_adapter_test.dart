@@ -37,6 +37,26 @@ void main() {
     });
   });
 
+  group('DELETE', () {
+    void mockDeleteSecureError() {
+      when(secureStorage.delete(key: anyNamed('key'))).thenThrow(Exception());
+    }
+
+    test('Should call delete with correct key', () async {
+      await sut.delete(key);
+
+      verify(secureStorage.delete(key: key)).called(1);
+    });
+
+    test('Should throws if delete throws', () async {
+      mockDeleteSecureError();
+
+      final future = sut.delete(key);
+
+      expect(future, throwsA(TypeMatcher<Exception>()));
+    });
+  });
+
   group('fetch', () {
     PostExpectation mockFetchSecureCall() =>
         when(secureStorage.read(key: anyNamed('key')));
