@@ -7,7 +7,7 @@ import 'components.dart';
 class SurveyItems extends StatelessWidget {
   final List<SurveyViewModel> viewModels;
 
-  SurveyItems({@required this.viewModels});
+  SurveyItems(this.viewModels);
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../components/components.dart';
 import '../../helpers/helpers.dart';
@@ -38,7 +39,10 @@ class SurveysPage extends StatelessWidget {
                 );
               }
               if (snapshot.hasData) {
-                return SurveyItems(viewModels: snapshot.data);
+                return Provider(
+                  create: (_) => presenter,
+                  child: SurveyItems(snapshot.data),
+                );
               }
               return SizedBox(height: 0);
             });

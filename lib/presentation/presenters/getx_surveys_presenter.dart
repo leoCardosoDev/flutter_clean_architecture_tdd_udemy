@@ -39,4 +39,6 @@ class GetxSurveysPresenter implements SurveysPresenter {
       _isLoading.value = false;
     }
   }
+
+  void goToSurveyResult(String surveyId) {}
 }
