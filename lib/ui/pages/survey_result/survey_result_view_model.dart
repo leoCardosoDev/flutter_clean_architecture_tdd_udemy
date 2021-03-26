@@ -1,8 +1,9 @@
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 import './survey_answer_view_model.dart';
 
-class SurveyResultViewModel {
+class SurveyResultViewModel extends Equatable {
   final String surveyId;
   final String question;
   final List<SurveyAnswerViewModel> answers;
