@@ -10,11 +10,15 @@ import 'package:flutter_clean_architecture_tdd/main/decorators/decorators.dart';
 class FetchSecureCacheStorageSpy extends Mock
     implements FetchSecureCacheStorage {}
 
+class DeleteSecureCacheStorageSpy extends Mock
+    implements DeleteSecureCacheStorage {}
+
 class HttpClientSpy extends Mock implements HttpClient {}
 
 void main() {
   AuthorizeHttpClientDecorator sut;
   FetchSecureCacheStorageSpy fetchSecureCacheStorage;
+  DeleteSecureCacheStorageSpy deleteSecureCacheStorage;
   HttpClientSpy httpClient;
   String httpResponse, token, url, method;
   Map body;
@@ -49,9 +53,11 @@ void main() {
 
   setUp(() {
     fetchSecureCacheStorage = FetchSecureCacheStorageSpy();
+    deleteSecureCacheStorage = DeleteSecureCacheStorageSpy();
     httpClient = HttpClientSpy();
     sut = AuthorizeHttpClientDecorator(
       fetchSecureCacheStorage: fetchSecureCacheStorage,
+      deleteSecureCacheStorage: deleteSecureCacheStorage,
       decoratee: httpClient,
     );
     url = faker.internet.httpUrl();
@@ -101,6 +107,7 @@ void main() {
     final future = sut.request(url: url, method: method, body: body);
 
     expect(future, throwsA(HttpError.forbidden));
+    verify(deleteSecureCacheStorage.deleteSecure('token')).called(1);
   });
 
   test('Should rethrow if decoratee throws', () async {
@@ -109,5 +116,15 @@ void main() {
     final future = sut.request(url: url, method: method, body: body);
 
     expect(future, throwsA(HttpError.badRequest));
+  });
+
+  test('Should delete cache if request throws ForbiddenError', () async {
+    mockHttpResponseError(HttpError.forbidden);
+
+    final future = sut.request(url: url, method: method, body: body);
+    await untilCalled(deleteSecureCacheStorage.deleteSecure('token'));
+
+    expect(future, throwsA(HttpError.forbidden));
+    verify(deleteSecureCacheStorage.deleteSecure('token')).called(1);
   });
 }
