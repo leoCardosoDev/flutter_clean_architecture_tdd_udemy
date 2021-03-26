@@ -14,21 +14,26 @@ void main() {
   SurveysPresenterSpy presenter;
   StreamController<bool> isLoadingController;
   StreamController<List<SurveyViewModel>> surveysController;
+  StreamController<String> navigatorToController;
 
   void initStreams() {
     isLoadingController = StreamController<bool>();
     surveysController = StreamController<List<SurveyViewModel>>();
+    navigatorToController = StreamController<String>();
   }
 
   void mockStreams() {
     when(presenter.isLoadingStream)
         .thenAnswer((_) => isLoadingController.stream);
     when(presenter.surveysStream).thenAnswer((_) => surveysController.stream);
+    when(presenter.navigateToStream)
+        .thenAnswer((_) => navigatorToController.stream);
   }
 
   void closeStreams() {
     isLoadingController.close();
     surveysController.close();
+    navigatorToController.close();
   }
 
   Future<void> loadPage(WidgetTester tester) async {
@@ -39,6 +44,8 @@ void main() {
       initialRoute: '/surveys',
       getPages: [
         GetPage(name: '/surveys', page: () => SurveysPage(presenter)),
+        GetPage(
+            name: '/any_route', page: () => Scaffold(body: Text('fake page'))),
       ],
     );
     await tester.pumpWidget(surveysPage);
@@ -127,5 +134,15 @@ void main() {
     await tester.pump();
 
     verify(presenter.goToSurveyResult('1')).called(1);
+  });
+
+  testWidgets('Should change page', (WidgetTester tester) async {
+    await loadPage(tester);
+
+    navigatorToController.add('/any_route');
+    await tester.pumpAndSettle();
+
+    expect(Get.currentRoute, '/any_route');
+    expect(find.text('fake page'), findsWidgets);
   });
 }
