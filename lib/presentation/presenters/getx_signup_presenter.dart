@@ -11,7 +11,7 @@ import '../protocols/protocols.dart';
 import '../mixins/mixins.dart';
 
 class GetxSignUpPresenter extends GetxController
-    with LoadingManager, NavigateToManager
+    with LoadingManager, NavigateToManager, FormManager, UiErrorManager
     implements SignUpPresenter {
   final Validation validation;
   final AddAccount addAccount;
@@ -21,8 +21,6 @@ class GetxSignUpPresenter extends GetxController
   final _nameError = Rx<UiError>();
   final _passwordError = Rx<UiError>();
   final _passwordConfirmationError = Rx<UiError>();
-  final _mainError = Rx<UiError>();
-  final _isFormValid = false.obs;
 
   String _name;
   String _email;
@@ -34,8 +32,6 @@ class GetxSignUpPresenter extends GetxController
   Stream<UiError> get passwordErrorStream => _passwordError.stream;
   Stream<UiError> get passwordConfirmationErrorStream =>
       _passwordConfirmationError.stream;
-  Stream<UiError> get mainErrorStream => _mainError.stream;
-  Stream<bool> get isFormValidStream => _isFormValid.stream;
 
   GetxSignUpPresenter(
       {@required this.validation,
@@ -85,7 +81,7 @@ class GetxSignUpPresenter extends GetxController
   }
 
   void _validateForm() {
-    _isFormValid.value = _emailError.value == null &&
+    isFormValid = _emailError.value == null &&
         _nameError.value == null &&
         _passwordError.value == null &&
         _passwordConfirmationError.value == null &&
@@ -108,10 +104,10 @@ class GetxSignUpPresenter extends GetxController
     } on DomainError catch (error) {
       switch (error) {
         case DomainError.emailInUse:
-          _mainError.value = UiError.emailInUse;
+          mainError = UiError.emailInUse;
           break;
         default:
-          _mainError.value = UiError.unexpected;
+          mainError = UiError.unexpected;
           break;
       }
       isLoading = false;

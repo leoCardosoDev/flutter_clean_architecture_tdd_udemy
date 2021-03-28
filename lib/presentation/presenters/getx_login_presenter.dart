@@ -11,7 +11,7 @@ import '../protocols/protocols.dart';
 import '../mixins/mixins.dart';
 
 class GetxLoginPresenter extends GetxController
-    with LoadingManager, NavigateToManager
+    with LoadingManager, NavigateToManager, FormManager, UiErrorManager
     implements LoginPresenter {
   final Validation validation;
   final Authentication authentication;
@@ -22,13 +22,9 @@ class GetxLoginPresenter extends GetxController
 
   var _emailError = Rx<UiError>();
   var _passwordError = Rx<UiError>();
-  var _mainError = Rx<UiError>();
-  var _isFormValid = false.obs;
 
   Stream<UiError> get emailErrorStream => _emailError.stream;
   Stream<UiError> get passwordErrorStream => _passwordError.stream;
-  Stream<UiError> get mainErrorStream => _mainError.stream;
-  Stream<bool> get isFormValidStream => _isFormValid.stream;
 
   GetxLoginPresenter(
       {@required this.validation,
@@ -64,7 +60,7 @@ class GetxLoginPresenter extends GetxController
   }
 
   void _validateForm() {
-    _isFormValid.value = _emailError.value == null &&
+    isFormValid = _emailError.value == null &&
         _passwordError.value == null &&
         _email != null &&
         _password != null;
@@ -80,10 +76,10 @@ class GetxLoginPresenter extends GetxController
     } on DomainError catch (error) {
       switch (error) {
         case DomainError.invalidCredentials:
-          _mainError.value = UiError.invalidCredentials;
+          mainError = UiError.invalidCredentials;
           break;
         default:
-          _mainError.value = UiError.unexpected;
+          mainError = UiError.unexpected;
       }
 
       isLoading = false;

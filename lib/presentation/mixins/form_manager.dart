@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 mixin FormManager {
-  final _isLoading = false.obs;
-  Stream<bool> get isLoadingStream => _isLoading.stream;
-  set isLoading(bool value) => _isLoading.value = value;
+  final _isFormValid = false.obs;
+  Stream<bool> get isFormValidStream => _isFormValid.stream;
+  set isFormValid(bool value) => _isFormValid.value = value;
 }
