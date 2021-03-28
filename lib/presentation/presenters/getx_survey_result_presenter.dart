@@ -9,7 +9,7 @@ import '../../ui/pages/pages.dart';
 
 import '../mixins/mixins.dart';
 
-class GetxSurveyResultPresenter
+class GetxSurveyResultPresenter extends GetxController
     with SessionManager, LoadingManager
     implements SurveyResultPresenter {
   final LoadSurveyResult loadSurveyResult;
