@@ -18,7 +18,7 @@ class SignUpPage extends StatelessWidget
         builder: (context) {
           handleLoading(context: context, stream: presenter.isLoadingStream);
           handleMainError(context: context, stream: presenter.mainErrorStream);
-          handleNavigation(presenter.navigateToStream);
+          handleNavigation(presenter.navigateToStream, clear: true);
 
           return GestureDetector(
             onTap: () => hideKeyboard(context),
