@@ -8,8 +8,11 @@ import '../../domain/helpers/helpers.dart';
 import '../../domain/usecases/usecases.dart';
 
 import '../protocols/protocols.dart';
+import '../mixins/mixins.dart';
 
-class GetxLoginPresenter extends GetxController implements LoginPresenter {
+class GetxLoginPresenter extends GetxController
+    with LoadingManager, NavigateToManager
+    implements LoginPresenter {
   final Validation validation;
   final Authentication authentication;
   final SaveCurrentAccount saveCurrentAccount;
@@ -20,16 +23,12 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
   var _emailError = Rx<UiError>();
   var _passwordError = Rx<UiError>();
   var _mainError = Rx<UiError>();
-  var _navigatorTo = RxString();
   var _isFormValid = false.obs;
-  var _isLoading = false.obs;
 
   Stream<UiError> get emailErrorStream => _emailError.stream;
   Stream<UiError> get passwordErrorStream => _passwordError.stream;
   Stream<UiError> get mainErrorStream => _mainError.stream;
-  Stream<String> get navigatorToStream => _navigatorTo.stream;
   Stream<bool> get isFormValidStream => _isFormValid.stream;
-  Stream<bool> get isLoadingStream => _isLoading.stream;
 
   GetxLoginPresenter(
       {@required this.validation,
@@ -73,11 +72,11 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
 
   Future<void> auth() async {
     try {
-      _isLoading.value = true;
+      isLoading = true;
       final account = await authentication
           .auth(AuthenticationParams(email: _email, secret: _password));
       await saveCurrentAccount.save(account);
-      _navigatorTo.value = '/surveys';
+      navigateTo = '/surveys';
     } on DomainError catch (error) {
       switch (error) {
         case DomainError.invalidCredentials:
@@ -87,11 +86,11 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
           _mainError.value = UiError.unexpected;
       }
 
-      _isLoading.value = false;
+      isLoading = false;
     }
   }
 
   void goToSignUp() {
-    _navigatorTo.value = '/signup';
+    navigateTo = '/signup';
   }
 }

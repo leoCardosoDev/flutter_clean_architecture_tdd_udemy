@@ -348,15 +348,14 @@ void main() {
     sut.validatePassword(password);
     sut.validatePasswordConfirmation(passwordConfirmation);
 
-    sut.navigatorToStream
+    sut.navigateToStream
         .listen(expectAsync1((page) => expect(page, '/surveys')));
 
     await sut.signUp();
   });
 
   test('Should go to LoginPage on link click', () async {
-    sut.navigatorToStream
-        .listen(expectAsync1((page) => expect(page, '/login')));
+    sut.navigateToStream.listen(expectAsync1((page) => expect(page, '/login')));
 
     sut.goToLogin();
   });

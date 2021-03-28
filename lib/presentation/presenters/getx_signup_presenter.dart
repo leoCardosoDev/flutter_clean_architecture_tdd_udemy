@@ -8,8 +8,11 @@ import '../../ui/pages/pages.dart';
 import '../../ui/helpers/errors/errors.dart';
 
 import '../protocols/protocols.dart';
+import '../mixins/mixins.dart';
 
-class GetxSignUpPresenter extends GetxController implements SignUpPresenter {
+class GetxSignUpPresenter extends GetxController
+    with LoadingManager, NavigateToManager
+    implements SignUpPresenter {
   final Validation validation;
   final AddAccount addAccount;
   final SaveCurrentAccount saveCurrentAccount;
@@ -20,8 +23,6 @@ class GetxSignUpPresenter extends GetxController implements SignUpPresenter {
   final _passwordConfirmationError = Rx<UiError>();
   final _mainError = Rx<UiError>();
   final _isFormValid = false.obs;
-  final _isLoading = false.obs;
-  final _navigateTo = RxString();
 
   String _name;
   String _email;
@@ -35,8 +36,6 @@ class GetxSignUpPresenter extends GetxController implements SignUpPresenter {
       _passwordConfirmationError.stream;
   Stream<UiError> get mainErrorStream => _mainError.stream;
   Stream<bool> get isFormValidStream => _isFormValid.stream;
-  Stream<bool> get isLoadingStream => _isLoading.stream;
-  Stream<String> get navigatorToStream => _navigateTo.stream;
 
   GetxSignUpPresenter(
       {@required this.validation,
@@ -98,14 +97,14 @@ class GetxSignUpPresenter extends GetxController implements SignUpPresenter {
 
   Future<void> signUp() async {
     try {
-      _isLoading.value = true;
+      isLoading = true;
       final account = await addAccount.add(AddAccountParams(
           name: _name,
           email: _email,
           password: _password,
           passwordConfirmation: _passwordConfirmation));
       await saveCurrentAccount.save(account);
-      _navigateTo.value = '/surveys';
+      navigateTo = '/surveys';
     } on DomainError catch (error) {
       switch (error) {
         case DomainError.emailInUse:
@@ -115,11 +114,11 @@ class GetxSignUpPresenter extends GetxController implements SignUpPresenter {
           _mainError.value = UiError.unexpected;
           break;
       }
-      _isLoading.value = false;
+      isLoading = false;
     }
   }
 
   void goToLogin() {
-    _navigateTo.value = '/login';
+    navigateTo = '/login';
   }
 }

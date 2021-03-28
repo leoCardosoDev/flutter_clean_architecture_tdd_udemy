@@ -36,7 +36,7 @@ class SignUpPage extends StatelessWidget {
             }
           });
 
-          presenter.navigatorToStream.listen((page) {
+          presenter.navigateToStream.listen((page) {
             if (page?.isNotEmpty == true) {
               Get.offAllNamed(page);
             }

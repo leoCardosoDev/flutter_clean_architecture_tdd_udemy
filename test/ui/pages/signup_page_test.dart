@@ -44,7 +44,7 @@ void main() {
         .thenAnswer((_) => passwordConfirmationErrorController.stream);
     when(presenter.mainErrorStream)
         .thenAnswer((_) => mainErrorController.stream);
-    when(presenter.navigatorToStream)
+    when(presenter.navigateToStream)
         .thenAnswer((_) => navigatorToController.stream);
     when(presenter.isFormValidStream)
         .thenAnswer((_) => isFormValidController.stream);

@@ -201,7 +201,7 @@ void main() {
     sut.validateEmail(email);
     sut.validatePassword(password);
 
-    sut.navigatorToStream
+    sut.navigateToStream
         .listen(expectAsync1((page) => expect(page, '/surveys')));
 
     await sut.auth();
@@ -232,7 +232,7 @@ void main() {
   });
 
   test('Should go to SignUpPage on link click', () async {
-    sut.navigatorToStream
+    sut.navigateToStream
         .listen(expectAsync1((page) => expect(page, '/signup')));
 
     sut.goToSignUp();

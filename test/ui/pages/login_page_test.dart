@@ -34,7 +34,7 @@ void main() {
         .thenAnswer((_) => emailErrorController.stream);
     when(presenter.passwordErrorStream)
         .thenAnswer((_) => passwordErrorController.stream);
-    when(presenter.navigatorToStream)
+    when(presenter.navigateToStream)
         .thenAnswer((_) => navigatorToController.stream);
     when(presenter.mainErrorStream)
         .thenAnswer((_) => mainErrorController.stream);
